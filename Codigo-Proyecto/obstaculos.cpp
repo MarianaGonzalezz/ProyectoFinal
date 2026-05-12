@@ -1,8 +1,7 @@
 #include "obstaculos.h"
 
 
-
-obstaculos::obstaculos(float x, float y, float velocidad) {
+obstaculos::obstaculos(float x, float y, float velocidad, QString tipo) {
     this -> x = x;
     this -> y = y;
     this -> velocidad = velocidad;
@@ -19,15 +18,15 @@ obstaculos::obstaculos(float x, float y, float velocidad) {
 
 obstaculos :: ~obstaculos(){}
 
-void obstaculo::actualizar(){
-    y += velocidad;
+void obstaculos::actualizar(float deltaTime){
+    y += velocidad * deltaTime;
 }
 
-void obstaculos :: dibujar (Qpainter &painter){
+void obstaculos :: dibujar (QPainter &painter){
     painter.drawPixmap(x, y, sprite);
 }
 
-void obstaculos::aplicarEfecto(Jugador &jugador)
+void obstaculos::aplicarEfecto(jugador &jugador)
 {
     //Game over si choca con cajas
     if(tipo == "caja"){
@@ -53,4 +52,23 @@ float obstaculos::getY(){
 
 QString obstaculos::getTipo(){
     return tipo;
+}
+
+float obstaculos::getVelocidad() const
+{
+    return velocidad;
+}
+
+QRectF obstaculos::getHitbox() const{
+    return QRectF (x, y, sprite.width(), sprite.height());
+}
+void obstaculos::setPosicion(float nx, float ny)
+{
+    x = nx;
+    y = ny;
+}
+
+void obstaculos::setVelocidad(float nuevaVelocidad)
+{
+    velocidad = nuevaVelocidad;
 }

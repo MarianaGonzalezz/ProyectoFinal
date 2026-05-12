@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>sprites/carrito.png</file>
+        <file>sprites/correr.png</file>
+        <file>sprites/O1caja.png</file>
+        <file>sprites/O2medusas.png</file>
+        <file>sprites/O3baches.png</file>
+        <file>sprites/cangreburger.png</file>
+        <file>sprites/bonus-moneda.png</file>
+    </qresource>
+</RCC>

@@ -167,16 +167,3 @@ void jugador::resetear() {
     vivo = true;
     qDebug() << "Jugador reseteado";
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QString>
+#include <QRectF>
 
 class obstaculos
 {
@@ -18,18 +19,25 @@ private:
     QPixmap sprite;
 
 public:
+
     obstaculos(float x, float y, float velocidad, QString tipo);
+    ~obstaculos();
 
-    void actualizar();
+    void actualizar(float deltaTime);
 
-    void dibujar(Qpainter& painter);
+    void dibujar(QPainter& painter);
 
-    void aplicarEfecto(Jugador& jugador);
+    void aplicarEfecto(jugador& bob);
 
-    float getX;
-    float getY;
+    float getX() const;
+    float getY() const;
+    float getvelocidad() const;
+    QString getTipo() const;
+    QRectF getHitbox() const;
 
-    QString getTipo();
+
+    void setPosicion(float nx, float ny);
+    void setVelocidad(float nuevaVelocidad);
 };
 
 #endif // OBSTACULOS_H
