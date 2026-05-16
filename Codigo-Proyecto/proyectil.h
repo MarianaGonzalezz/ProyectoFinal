@@ -29,6 +29,7 @@ public:
 
     float getX();
     float getY();
+    QRectF getHitbox() const;
 };
 
 #endif // PROYECTIL_H

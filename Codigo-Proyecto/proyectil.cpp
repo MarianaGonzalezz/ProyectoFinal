@@ -42,3 +42,8 @@ float proyectil::getX(){
 float proyectil::getY(){
     return y;
 }
+QRectF proyectil::getHitbox() const{
+    return QRectF (x, y,
+                  sprite.width(), sprite.height());
+
+}

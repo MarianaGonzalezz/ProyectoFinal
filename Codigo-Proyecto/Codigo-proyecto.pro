@@ -8,17 +8,21 @@ CONFIG += c++17
 
 SOURCES += \
     gamewidget.cpp \
+    juego.cpp \
     main.cpp \
     mainwindow.cpp \
     nivel.cpp \
+    nivel2.cpp \
     obstaculos.cpp \
     jugador.cpp \
     proyectil.cpp
 
 HEADERS += \
     gamewidget.h \
+    juego.h \
     mainwindow.h \
     nivel.h \
+    nivel2.h \
     obstaculos.h \
     proyectil.h
 

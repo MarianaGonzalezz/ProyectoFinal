@@ -35,10 +35,10 @@ void obstaculos::aplicarEfecto(jugador &jugador)
 
     //Friccion
     else if (tipo == "bache"){
-        jugador.setVelocidad(jugador.getVelocidad()* 0.7);
+        jugador.setVelocidadX(jugador.getVelocidadX()* 0.7);
     }
     else if (tipo == "medusa"){
-        jugador.setVelocidad(jugador.getVelocidad()*0.5);
+        jugador.setVelocidadX(jugador.getVelocidadX()*0.5);
     }
 
 }
