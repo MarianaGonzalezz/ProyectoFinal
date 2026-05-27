@@ -7,5 +7,12 @@
         <file>sprites/O3baches.png</file>
         <file>sprites/cangreburger.png</file>
         <file>sprites/bonus-moneda.png</file>
+        <file>sprites/escena1.png</file>
+        <file>sprites/escena2.png</file>
+        <file>sprites/fondo1.png</file>
+        <file>sprites/fondo2.jpg</file>
+        <file>sprites/sprite_0.png</file>
+        <file>sprites/sprite_1.png</file>
+        <file>sprites/sprite_2.png</file>
     </qresource>
 </RCC>

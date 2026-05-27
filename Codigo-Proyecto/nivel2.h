@@ -5,14 +5,14 @@
 using namespace std;
 
 #include "nivel.h"
-#include "enemigo.h"
+//#include "enemigo.h"
 #include "proyectil.h"
 
 class nivel2 : public nivel
 {
 private:
 
-    enemigo calamardo;
+    //enemigo calamardo;
     vector<proyectil*> proyectiles;
     float tiempoDisparo;
     float intervaloDisparo;

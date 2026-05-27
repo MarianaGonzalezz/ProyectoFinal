@@ -31,7 +31,7 @@ public:
 
     float getX() const;
     float getY() const;
-    float getvelocidad() const;
+    float getVelocidad() const;
     QString getTipo() const;
     QRectF getHitbox() const;
 

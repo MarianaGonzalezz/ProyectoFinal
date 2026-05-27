@@ -10,7 +10,7 @@ const float Alto_moneda=30.0f;
 bonus::bonus(float x, float y )
     : x(x), y(y), valorTiempo(Tiempo_bonus), activo(true)
 {
-    if (!sprite.load(":/sprites/moneda.png")) {
+    if (!sprite.load(":/sprites/bonus-moneda.png")) {
         qDebug() << "Error: No se pudo cargar la imagen de la moneda";
         sprite = QPixmap(Ancho_moneda, Alto_moneda);
         sprite.fill(Qt::yellow);

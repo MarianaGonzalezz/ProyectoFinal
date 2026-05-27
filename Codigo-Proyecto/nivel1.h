@@ -3,9 +3,12 @@
 
 
 #include <QTimer>
+#include <QPoint>
+#include <QVector>
 #include <vector>
 
 #include "nivel.h"
+#include "jugador.h"
 #include "obstaculos.h"
 #include "bonus.h"
 
@@ -17,7 +20,7 @@ private:
 
     // Elementos del nivel
 
-    std::vector<obstaculos*> obstaculos;
+    std::vector<obstaculos*> vectorObstaculos;
     std::vector<bonus*> monedas;
 
     // Timer
@@ -43,7 +46,16 @@ public:
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
 
+    QPixmap fondo;
+    float vistasetY;
+    float velocidadFondo;
 
+    QVector<QPixmap> framesFondoPrincipal;
+    QVector<QPixmap> offsetsFramesFondoPrincipal;
+
+    int frameActualFondo;
+    float tiempoAnimacionFondo;
+    float duracionFrameFondo;
 };
 
 #endif // NIVEL1_H
