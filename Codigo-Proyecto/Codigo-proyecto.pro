@@ -16,6 +16,7 @@ SOURCES += \
     obstaculos.cpp \
     jugador.cpp \
     proyectil.cpp
+    enemigo.cpp \
 
 HEADERS += \
     gamewidget.h \
@@ -25,6 +26,7 @@ HEADERS += \
     nivel2.h \
     obstaculos.h \
     proyectil.h
+    enemigo.h \
 
 FORMS += \
     mainwindow.ui
