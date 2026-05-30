@@ -23,7 +23,7 @@ void obstaculos::actualizar(float deltaTime){
 }
 
 void obstaculos :: dibujar (QPainter &painter){
-    painter.drawPixmap( QRectF(x, y, 60, 60),
+    painter.drawPixmap( QRectF(x, y, 120, 120),
     sprite,
     QRectF(0,0,sprite.width(), sprite.height()));
 }
@@ -62,7 +62,7 @@ float obstaculos::getVelocidad() const
 }
 
 QRectF obstaculos::getHitbox() const{
-    return QRectF (x, y, sprite.width(), sprite.height());
+    return QRectF (x+20, y+20, 60, 60);
 }
 void obstaculos::setPosicion(float nx, float ny)
 {

@@ -27,6 +27,8 @@ protected:
 public:
     juego(QWidget *parent = nullptr);
     ~juego();
+    enum estadoJuego{INICIO, JUGANDO, GAMEOVER};
+
 };
 
 #endif // JUEGO_H

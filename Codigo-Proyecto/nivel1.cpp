@@ -1,5 +1,6 @@
 #include "nivel1.h"
 #include <QDebug>
+#include <cstdlib>
 
 nivel1::nivel1()
     : nivel()
@@ -26,6 +27,8 @@ nivel1::nivel1()
     vistasetY = 0;
     velocidadFondo = 40.0f;
 
+    tiempoSpawn = 0.0f;
+    intervaloSpawn = 1.0f;
 }
 
 nivel1::~nivel1()
@@ -51,7 +54,7 @@ void nivel1::iniciar()
 
     //vectorObstaculos.push_back(new obstaculos(900,500,0,"medusas"));
 
-    monedas.push_back(new bonus(500,400));
+    //monedas.push_back(new bonus(430,350));
 
     qDebug() << "Iniciando Nivel 1";
 
@@ -79,6 +82,18 @@ void nivel1::verificarColisiones(){
 
 void nivel1::actualizar(float deltaTime){
 
+    //Dificultad progresiva
+    if (intervaloSpawn > 0.3){
+        intervaloSpawn -= 0.0001f;
+    }
+
+    tiempoSpawn += deltaTime;
+
+    if (tiempoSpawn >= intervaloSpawn){
+        tiempoSpawn = 0.0f;
+        generarObjetoAleatorio();
+    }
+
     bob.actualizar(deltaTime);
 
     //Limites de la carretera
@@ -96,6 +111,9 @@ void nivel1::actualizar(float deltaTime){
 
     for(obstaculos* obs : vectorObstaculos){
         obs->actualizar(deltaTime);
+    }
+    for(bonus* moneda : monedas){
+        moneda ->actualizar(deltaTime);
     }
 
     verificarColisiones();
@@ -135,6 +153,20 @@ void nivel1::dibujar(QPainter &painter){
 
 }
 
+void nivel1::generarObjetoAleatorio(){
+
+    int tipo = rand()%4;
+    float x = 350 + (rand() % 500);
+    float velocidad = 250.0f;
+
+    switch(tipo){
+    case 0: vectorObstaculos.push_back(new obstaculos(x, 160, velocidad, "caja")); break;
+    case 1: vectorObstaculos.push_back(new obstaculos(x, 160, velocidad, "bache")); break;
+    case 2: vectorObstaculos.push_back(new obstaculos(x, 160, velocidad, "medusas")); break;
+    case 3: monedas.push_back(new bonus(x, 200)); break;
+    }
+
+}
 void nivel1::keyPressEvent(QKeyEvent *event){
     if (event->key()== Qt::Key_A){
         bob.moverIzq();

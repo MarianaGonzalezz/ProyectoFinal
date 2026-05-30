@@ -109,7 +109,7 @@ float jugador::getVelocidadX() const { return velocidadX; }
 float jugador::getVelocidadY() const { return velocidadY; }
 
 QRectF jugador::getHitbox() const{
-    return QRectF(x, y, ancho, alto);
+    return QRectF(x+20, y+20, 100, 100);
 }
 
 bool jugador::estaVivo() const { return vivo; }

@@ -35,6 +35,7 @@ private:
     void crearObstaculos();
     void crearMonedas();
     void verificarColisiones();
+    void generarObjetoAleatorio();
 
 public:
     nivel1();
@@ -56,6 +57,9 @@ public:
     int frameActualFondo;
     float tiempoAnimacionFondo;
     float duracionFrameFondo;
+
+    float tiempoSpawn;
+    float intervaloSpawn;
 };
 
 #endif // NIVEL1_H

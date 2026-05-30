@@ -3,14 +3,14 @@
 
 
 const int Tiempo_bonus= 5;
-const float Ancho_moneda= 30.0f;
-const float Alto_moneda=30.0f;
+const float Ancho_moneda= 100.0f;
+const float Alto_moneda= 60.0f;
 
 
 bonus::bonus(float x, float y )
     : x(x), y(y), valorTiempo(Tiempo_bonus), activo(true)
 {
-    if (!sprite.load(":/sprites/bonus-moneda.png")) {
+    if (!sprite.load(":/sprites/billete.jpg")) {
         qDebug() << "Error: No se pudo cargar la imagen de la moneda";
         sprite = QPixmap(Ancho_moneda, Alto_moneda);
         sprite.fill(Qt::yellow);
@@ -22,13 +22,14 @@ bonus::~bonus(){
     qDebug() << "Bonus destruido";
 }
 
-void bonus::actualizar(){
-    // Moneda fija - no se mueve
+void bonus::actualizar(float deltaTime){
+    y += 250.0f * deltaTime;
 }
 
 void bonus::dibujar(QPainter& painter){
     if (!activo) return;
-    painter.drawPixmap(static_cast<int>(x), static_cast<int>(y), sprite);
+    painter.drawPixmap(QRectF(x,y, Ancho_moneda, Alto_moneda), sprite,
+                       QRectF(0, 0, sprite.width(), sprite.height()));
 }
 
 int bonus::aplicarEfecto(jugador& jugador){
