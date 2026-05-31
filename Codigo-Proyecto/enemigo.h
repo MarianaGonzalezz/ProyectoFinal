@@ -11,7 +11,7 @@ class enemigo{
 private:
 
     float x,y;
-    Qpixmap sprite;
+    QPixmap sprite;
 
     bool dificil;
 
