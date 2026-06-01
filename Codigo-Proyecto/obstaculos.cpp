@@ -23,7 +23,9 @@ void obstaculos::actualizar(float deltaTime){
 }
 
 void obstaculos :: dibujar (QPainter &painter){
-    painter.drawPixmap(x, y, sprite);
+    painter.drawPixmap( QRectF(x, y, 120, 120),
+    sprite,
+    QRectF(0,0,sprite.width(), sprite.height()));
 }
 
 void obstaculos::aplicarEfecto(jugador &jugador)
@@ -37,20 +39,20 @@ void obstaculos::aplicarEfecto(jugador &jugador)
     else if (tipo == "bache"){
         jugador.setVelocidadX(jugador.getVelocidadX()* 0.7);
     }
-    else if (tipo == "medusa"){
+    else if (tipo == "medusas"){
         jugador.setVelocidadX(jugador.getVelocidadX()*0.5);
     }
 
 }
 
-float obstaculos::getX(){
+float obstaculos::getX() const{
     return x;
 }
-float obstaculos::getY(){
+float obstaculos::getY() const{
     return y;
 }
 
-QString obstaculos::getTipo(){
+QString obstaculos::getTipo() const{
     return tipo;
 }
 
@@ -60,7 +62,7 @@ float obstaculos::getVelocidad() const
 }
 
 QRectF obstaculos::getHitbox() const{
-    return QRectF (x, y, sprite.width(), sprite.height());
+    return QRectF (x+20, y+20, 60, 60);
 }
 void obstaculos::setPosicion(float nx, float ny)
 {

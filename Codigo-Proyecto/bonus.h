@@ -21,7 +21,7 @@ public:
 
     // Metodos
 
-    void actualizar();
+    void actualizar(float deltaTime);
     void dibujar(QPainter& painter);
     int aplicarEfecto(jugador& jugador);
 

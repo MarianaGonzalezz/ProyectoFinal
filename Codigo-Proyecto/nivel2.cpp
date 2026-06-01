@@ -1,3 +1,4 @@
+/*
 #include "nivel2.h"
 #include "QDebug"
 #include <cstdlib>
@@ -109,3 +110,4 @@ void nivel2::keyReleaseEvent(QKeyEvent *event){
         bob.setAgachado(false);
     }
 }
+*/

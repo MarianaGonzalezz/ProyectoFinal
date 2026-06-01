@@ -3,8 +3,8 @@
 
 const float Velocidad_movimiento=400.0f;
 const float Fuerza_salto=600.0f;
-const float Ancho_normal=50.0f;
-const float Alto_normal=50.0f;
+const float Ancho_normal=260.0f;
+const float Alto_normal=260.0f;
 const float Alto_agachado=30.0f;
 
 // Constructores
@@ -18,14 +18,8 @@ jugador::jugador()
     , agachado(false)
     , ancho(Ancho_normal)
     , alto(Alto_normal)
-    , vivo(true)
-{
-    // Cargar el sprite de bob esponja
-    if (!sprite.load(":/sprites/bob_esponja.png")) {
-        qDebug() << "Error: No se pudo cargar la imagen de Bob Esponja";
-    }
-    qDebug() << "Jugador creado en posición (0, 0)";
-}
+    , vivo(true), direccionActual(FRENTE)
+{}
 
 jugador::jugador(float xInicial, float yInicial)
     : x(xInicial)
@@ -36,14 +30,8 @@ jugador::jugador(float xInicial, float yInicial)
     , agachado(false)
     , ancho(Ancho_normal)
     , alto(Alto_normal)
-    , vivo(true)
-{
-    // Cargar el sprite de bob esponja
-    if (!sprite.load(":/sprites/bob_esponja.png")) {
-        qDebug() << "Error: No se pudo cargar la imagen de Bob Esponja";
-    }
-    qDebug() << "Jugador creado en posición (" << x << "," << y << ")";
-}
+    , vivo(true), direccionActual(FRENTE)
+{}
 
 // Destructor
 
@@ -55,13 +43,18 @@ jugador::~jugador(){
 // Metodos
 
 void jugador::moverIzq(){
+    direccionActual = IZQUIERDA;
     velocidadX=-Velocidad_movimiento;
 }
 
 void jugador::moverDer(){
+    direccionActual = DERECHA;
     velocidadX=Velocidad_movimiento;
 }
 
+void jugador::mirarFrente(){
+    direccionActual = FRENTE;
+}
 void jugador::saltar(){
     if(enSuelo && !agachado && vivo){
         velocidadY=-Fuerza_salto;
@@ -88,9 +81,24 @@ void jugador::actualizar(float deltaTime){
 }
 
 void jugador::dibujar(QPainter& painter){
-    if(vivo){
-        painter.drawPixmap(static_cast<int>(x), static_cast<int>(y), sprite);
+
+    if(!vivo) return;
+
+    int frameWidth = sprite.width() / 3;
+    int frameHeight = sprite.height();
+
+    int frameX =0;
+
+    switch(direccionActual){
+    case FRENTE: frameX = 0; break;
+    case DERECHA: frameX = frameWidth; break;
+    case IZQUIERDA: frameX = frameWidth * 2; break;
     }
+
+    QRect frameActual(frameX, 0, frameWidth, frameHeight);
+
+    painter.drawPixmap(QRectF (x, y, ancho, alto),
+                       sprite, frameActual);
 }
 
 // Getters
@@ -101,7 +109,7 @@ float jugador::getVelocidadX() const { return velocidadX; }
 float jugador::getVelocidadY() const { return velocidadY; }
 
 QRectF jugador::getHitbox() const{
-    return QRectF(x, y, ancho, alto);
+    return QRectF(x+20, y+20, 100, 100);
 }
 
 bool jugador::estaVivo() const { return vivo; }
@@ -151,6 +159,10 @@ void jugador::setAlto(float nuevoAlto) {
 void jugador::setSprite(const QString& ruta) {
     if (!sprite.load(ruta)) {
         qDebug() << "Error: No se pudo cargar el sprite desde" << ruta;
+    } else{
+            qDebug() << "Sprite cargado correctamente";
+            qDebug() << "Ancho:" << sprite.width();
+            qDebug() << "Alto:" << sprite.height();
     }
 }
 

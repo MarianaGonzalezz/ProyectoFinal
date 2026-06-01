@@ -1,7 +1,7 @@
 #ifndef JUGADOR_H
 #define JUGADOR_H
 
-#include <Qpainter>
+#include <QPainter>
 #include <QPixmap>
 #include <QRectF>
 
@@ -20,6 +20,13 @@ private:
 
     QPixmap sprite;
 
+    //Manejo sprite nivel1
+
+    enum Direccion{
+        FRENTE, DERECHA, IZQUIERDA
+    };
+    Direccion direccionActual;
+
 public:
 
     jugador();
@@ -34,6 +41,8 @@ public:
     void agacharse();
     void actualizar(float deltaTime);
     void dibujar(QPainter& painter);
+
+    void mirarFrente();
 
     // Getters
 
