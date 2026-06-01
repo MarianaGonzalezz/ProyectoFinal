@@ -117,6 +117,13 @@ void nivel1::actualizar(float deltaTime){
     }
 
     verificarColisiones();
+
+    if(!bob.estaVivo()){
+        qDebug()<<"Bob murió";
+        terminado = true;
+        victoria = false;
+    }
+
     vistasetY = 0;
 
     if (!framesFondoPrincipal.isEmpty()){
@@ -168,6 +175,9 @@ void nivel1::generarObjetoAleatorio(){
 
 }
 void nivel1::keyPressEvent(QKeyEvent *event){
+
+    qDebug() << "Tecla:" << event->key();
+
     if (event->key()== Qt::Key_A){
         bob.moverIzq();
     }

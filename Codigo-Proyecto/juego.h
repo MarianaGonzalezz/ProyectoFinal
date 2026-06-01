@@ -1,7 +1,7 @@
 #ifndef JUEGO_H
 #define JUEGO_H
 
-#include <Qwidget>
+#include <QWidget>
 #include <QTimer>
 
 #include "nivel.h"
@@ -19,16 +19,21 @@ private:
 
     void cambiarNivel(int numero);
 
+signals:
+    void gameOver();
+
 protected:
     void paintEvent(QPaintEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 
 public:
-    juego(QWidget *parent = nullptr);
+    explicit juego(QWidget *parent = nullptr);
     ~juego();
-    enum estadoJuego{INICIO, JUGANDO, GAMEOVER};
 
+    bool estaTerminado() const;
+
+    void iniciarJuego();
 };
 
 #endif // JUEGO_H
