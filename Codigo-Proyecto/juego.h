@@ -6,7 +6,7 @@
 
 #include "nivel.h"
 #include "nivel1.h"
-//#include "nivel2.h"
+#include "nivel2.h"
 
 class juego : public QWidget
 {
@@ -34,6 +34,8 @@ public:
     bool estaTerminado() const;
 
     void iniciarJuego();
+
+
 };
 
 #endif // JUEGO_H

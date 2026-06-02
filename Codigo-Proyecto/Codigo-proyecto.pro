@@ -17,7 +17,7 @@ SOURCES += \
     bonus.cpp \
     obstaculos.cpp \
     jugador.cpp \
-    proyectil.cpp
+    proyectil.cpp \
     enemigo.cpp \
 
 HEADERS += \
@@ -30,7 +30,7 @@ HEADERS += \
     bonus.h \
     obstaculos.h \
     jugador.h \
-    proyectil.h
+    proyectil.h \
     enemigo.h \
 
 FORMS += \

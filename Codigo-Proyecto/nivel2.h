@@ -5,26 +5,24 @@
 using namespace std;
 
 #include "nivel.h"
-//#include "enemigo.h"
+#include "enemigo.h"
 #include "proyectil.h"
 
 class nivel2 : public nivel
 {
 private:
 
-    //enemigo calamardo;
+    enemigo calamardo;
     vector<proyectil*> proyectiles;
-    float tiempoDisparo;
-    float intervaloDisparo;
-    float dificultad;
-    void lanzarCangreburger();
-    void verificarColisiones();
-    void aumentarDificultad();
+
+    void verificarColisiones(); 
 
 public:
     nivel2();
     ~nivel2();
 
+    QPixmap fondo;
+    int fondoOffset;
     void iniciar() override;
     void actualizar(float deltaTime) override;
     void dibujar(QPainter &painter) override;

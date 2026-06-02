@@ -1,4 +1,3 @@
-/*
 #include "nivel2.h"
 #include "QDebug"
 #include <cstdlib>
@@ -6,11 +5,14 @@
 
 
 nivel2::nivel2()
-    : calamardo (1000, 300),
-    tiempoDisparo(0),
-    intervaloDisparo(2.0f),
-    dificultad(1.0f)
-{
+    : calamardo (900, 350, true){
+    fondo.load(":/sprites/fondoN2.png");
+    fondo = fondo.scaled(
+        1280,
+        700,
+        Qt::IgnoreAspectRatio,
+        Qt::SmoothTransformation);
+    fondoOffset = 0;
     srand(time(nullptr));
 }
 
@@ -22,7 +24,18 @@ nivel2::~nivel2(){
 }
 
 void nivel2::iniciar(){
-    bob.setPosicion(100,500);
+
+    bob.cargarSpritesNivel2(":/sprites/correr.png",
+                            ":/sprites/saltar5.png",
+                            ":/sprites/agacharse.png",
+                            ":/sprites/muerte.png"
+                            );
+    bob.activarAnimacionNivel2(5);
+
+    bob.setPosicion(400,370);
+
+    bob.setAncho(180);
+    bob.setAlto(180);
 
     terminado = false;
     victoria=false;
@@ -30,25 +43,54 @@ void nivel2::iniciar(){
 
 void nivel2::actualizar(float deltaTime){
 
-    //Movimiento automatico
-    bob.setVelocidadX(300);
-
     bob.actualizar(deltaTime);
 
-    tiempoDisparo += deltaTime;
+    if(bob.muerteTerminada()){
 
-    if(tiempoDisparo >= intervaloDisparo){
-        lanzarCangreburger();
-        tiempoDisparo =0;
+        terminado = true;
+        victoria = false;
+
+        return;
     }
-    for (proyectil* p : proyectiles){
+
+    // Si Bob esta muriendo:
+    // congelar TODO excepto su animacion
+    if(!bob.estaVivo()){
+        return;
+    }
+
+    // ---------- JUEGO NORMAL ----------
+
+    calamardo.actualizar(deltaTime);
+
+    fondoOffset += 2;
+
+    if(fondoOffset >= fondo.width()){
+        fondoOffset = 0;
+    }
+
+    proyectil* nuevo = calamardo.lanzarProyectil(
+        bob.getX(),
+        bob.getY(),
+        bob.getVelocidadX()
+        );
+
+    if(nuevo){
+        proyectiles.push_back(nuevo);
+    }
+
+    for(proyectil* p : proyectiles){
         p->actualizar(deltaTime);
     }
+
     verificarColisiones();
-    aumentarDificultad();
 }
 
 void nivel2::dibujar(QPainter &painter){
+
+    painter.drawPixmap(-fondoOffset, 0, fondo);
+    painter.drawPixmap(fondo.width() - fondoOffset, 0, fondo);
+
     bob.dibujar(painter);
     calamardo.dibujar(painter);
 
@@ -57,46 +99,54 @@ void nivel2::dibujar(QPainter &painter){
     }
 }
 
-void nivel2::lanzarCangreburger(){
-    float objetivoY = bob.getY();
-    float error = (rand() % 100) - 50;
-    objetivoY += error/dificultad;
-
-    float velocidadY = (objetivoY - calamardo.getY()) * 2;
-    proyectiles.push_back(
-
-        new proyectil(
-            calamardo.getX(),
-            calamardo.getY(),
-            -500,
-            velocidadY
-            )
-        );
-    qDebug()<<"cangreburger lanzada";
-}
-
 void nivel2::verificarColisiones(){
-    for (proyectil* p : proyectiles){
 
-        if(p->getHitbox().intersects(
-                bob.getHitbox()))
-        {
-            bob.setVivo(false);
-            terminado = true;
-            victoria = false;
+    for(auto it = proyectiles.begin();
+         it != proyectiles.end(); ){
+
+        proyectil* p = *it;
+
+        //Acierto
+        if(p->getHitbox().intersects(bob.getHitbox())){
+            calamardo.registrarAcierto();
+
+            bob.recibirImpacto();
+
+            delete p;
+
+            it= proyectiles.erase(it);
+            continue;
         }
-    }
-}
+        //Fallo
+        if(p->getY() > 720 || p->getX() < -100 || p->getX() > 1280){
 
-void nivel2::aumentarDificultad(){
-    dificultad += 0.001f;
-    intervaloDisparo = 2.0f/dificultad;
-    if (intervaloDisparo< 0.4f){
-        intervaloDisparo = 0.4f;
+            calamardo.registrarFallo();
+
+            delete p;
+
+            it = proyectiles.erase(it);
+
+            continue;
+            }
+
+        if(p->getTiempoVida() > 3.0f){
+            calamardo.registrarFallo();
+
+            delete p;
+
+            it = proyectiles.erase(it);
+            continue;
+        }
+        ++it;
     }
+
 }
 
 void nivel2::keyPressEvent(QKeyEvent *event){
+
+    if(event->isAutoRepeat())
+        return;
+
     if(event ->key() == Qt::Key_W){
         bob.saltar();
     }
@@ -106,8 +156,11 @@ void nivel2::keyPressEvent(QKeyEvent *event){
 }
 
 void nivel2::keyReleaseEvent(QKeyEvent *event){
+
+    if(event->isAutoRepeat())
+        return;
+
     if(event->key() == Qt::Key_S){
         bob.setAgachado(false);
     }
 }
-*/

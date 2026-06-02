@@ -41,9 +41,11 @@ void MainWindow::on_JUGAR_clicked()
     miJuego->setFocus();
 }
 
-/*
+
 void MainWindow::on_btnReiniciar_clicked()
 {
+    qDebug() << "CLICK REINICIAR";
+
     delete miJuego;
 
     miJuego = new juego(ui->widgetJuego);
@@ -59,10 +61,11 @@ void MainWindow::on_btnReiniciar_clicked()
         ui->stackedWidget->setCurrentWidget(ui->pageGameover);
     });
 
+    miJuego->iniciarJuego();
+
     ui->stackedWidget->setCurrentWidget(ui->pageJuego);
     miJuego->setFocus();
 }
-*/
 
 void MainWindow::on_btnVolver_clicked()
 {

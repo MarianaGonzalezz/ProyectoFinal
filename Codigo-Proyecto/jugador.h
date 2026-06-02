@@ -11,6 +11,8 @@ private:
     float x,y;
     float velocidadX, velocidadY;
 
+    int impactos;
+
     // Estado interno
 
     bool enSuelo;
@@ -18,10 +20,35 @@ private:
     float ancho,alto;
     bool vivo;
 
+
+    //Animacion nivel2
+    QPixmap spriteCorrer;
+    QPixmap spriteSaltar;
+    QPixmap spriteAgachar;
+    QPixmap spriteMuerte;
+
+    enum estadoAnimacion{
+        CORRIENDO,
+        SALTANDO,
+        AGACHADO,
+        MUERTO
+    };
+    estadoAnimacion estadoActual;
+
+    bool animacionNivel2;
+
+    int frameActual;
+    int totalFrames;
+
+    float tiempoAnimacion;
+    float velocidadAnimacion;
+
+    bool soltandoAgachado;
+    bool animacionMuerteTerminada;
+
+    //Animacion nivel1
+
     QPixmap sprite;
-
-    //Manejo sprite nivel1
-
     enum Direccion{
         FRENTE, DERECHA, IZQUIERDA
     };
@@ -43,6 +70,12 @@ public:
     void dibujar(QPainter& painter);
 
     void mirarFrente();
+    void activarAnimacionNivel2(int frames);
+    void cargarSpritesNivel2(
+        const QString& correr,
+        const QString& saltar,
+        const QString& agachar,
+        const QString& muerte);
 
     // Getters
 
@@ -56,6 +89,9 @@ public:
     bool estaAgachado() const;
     float getAncho() const;
     float getAlto() const;
+    int getImpactos() const;
+    void recibirImpacto();
+    bool muerteTerminada() const;
 
     // Setters ( para que ambos niveles puedan modificar)
 
@@ -66,6 +102,7 @@ public:
     void setEnSuelo(bool estado);
     void setAgachado(bool estado);
     void setAlto(float nuevoAlto);
+    void setAncho(float nuevoAncho);
     void setSprite(const QString& ruta);         // Para cambiar el sprite
     void resetear();
 

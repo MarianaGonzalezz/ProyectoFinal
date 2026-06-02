@@ -162,15 +162,22 @@ void nivel1::dibujar(QPainter &painter){
 
 void nivel1::generarObjetoAleatorio(){
 
-    int tipo = rand()%4;
+    int tipo = rand()%8;
     float x = 350 + (rand() % 500);
     float velocidad = 250.0f;
 
     switch(tipo){
     case 0: vectorObstaculos.push_back(new obstaculos(x, 160, velocidad, "caja")); break;
-    case 1: vectorObstaculos.push_back(new obstaculos(x, 160, velocidad, "bache")); break;
-    case 2: vectorObstaculos.push_back(new obstaculos(x, 160, velocidad, "medusas")); break;
-    case 3: monedas.push_back(new bonus(x, 200)); break;
+    case 1:
+    case 2:
+    case 3:
+        vectorObstaculos.push_back(new obstaculos(x, 160, velocidad, "bache")); break;
+    case 4:
+    case 5:
+    case 6:
+    vectorObstaculos.push_back(new obstaculos(x, 160, velocidad, "medusas")); break;
+
+    case 7: monedas.push_back(new bonus(x, 200)); break;
     }
 
 }

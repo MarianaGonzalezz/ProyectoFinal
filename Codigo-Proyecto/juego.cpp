@@ -57,12 +57,10 @@ void juego::cambiarNivel(int numero)
         nivelActual = new nivel1();
     }
 
-    /*
     else if(numero == 2)
     {
         nivelActual = new nivel2();
     }
-    */
 
     nivelActual->iniciar();
 }

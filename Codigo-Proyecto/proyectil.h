@@ -14,6 +14,8 @@ class proyectil
 
     float gravedad;
 
+    float tiempoVida;
+
     QPixmap sprite;
 
 public:
@@ -30,6 +32,8 @@ public:
     float getX();
     float getY();
     QRectF getHitbox() const;
+
+    float getTiempoVida() const;
 };
 
 #endif // PROYECTIL_H

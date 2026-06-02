@@ -16,5 +16,10 @@
         <file>sprites/boton1.png</file>
         <file>sprites/boton2.png</file>
         <file>sprites/boton3.png</file>
+        <file>sprites/calamardo2.png</file>
+        <file>sprites/fondoN2.png</file>
+        <file>sprites/agacharse.png</file>
+        <file>sprites/saltar5.png</file>
+        <file>sprites/muerte.png</file>
     </qresource>
 </RCC>

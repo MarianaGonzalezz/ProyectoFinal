@@ -7,6 +7,9 @@ const float Ancho_normal=260.0f;
 const float Alto_normal=260.0f;
 const float Alto_agachado=30.0f;
 
+const float gravedad = 1200.0f;
+const float suelo = 370;
+
 // Constructores
 
 jugador::jugador()
@@ -19,7 +22,20 @@ jugador::jugador()
     , ancho(Ancho_normal)
     , alto(Alto_normal)
     , vivo(true), direccionActual(FRENTE)
-{}
+{
+    animacionNivel2 = false;
+
+    frameActual = 0;
+    totalFrames = 1;
+
+    tiempoAnimacion = 0;
+    velocidadAnimacion = 0.1f;
+
+    soltandoAgachado = false;
+
+    impactos = 0;
+    animacionMuerteTerminada = false;
+}
 
 jugador::jugador(float xInicial, float yInicial)
     : x(xInicial)
@@ -31,16 +47,26 @@ jugador::jugador(float xInicial, float yInicial)
     , ancho(Ancho_normal)
     , alto(Alto_normal)
     , vivo(true), direccionActual(FRENTE)
-{}
+{
+    animacionNivel2 = false;
+
+    frameActual = 0;
+    totalFrames = 1;
+
+    tiempoAnimacion = 0;
+    velocidadAnimacion = 0.1f;
+
+    soltandoAgachado = false;
+
+    impactos = 0;
+    animacionMuerteTerminada = false;
+}
 
 // Destructor
 
 jugador::~jugador(){
     qDebug() << "jugador destruido";
 }
-
-
-// Metodos
 
 void jugador::moverIzq(){
     direccionActual = IZQUIERDA;
@@ -55,34 +81,162 @@ void jugador::moverDer(){
 void jugador::mirarFrente(){
     direccionActual = FRENTE;
 }
+
 void jugador::saltar(){
     if(enSuelo && !agachado && vivo){
         velocidadY=-Fuerza_salto;
         enSuelo=false;
+
+        if(animacionNivel2){
+            estadoActual = SALTANDO;
+        }
         qDebug() << "bob esponja salta!";
     }
 }
 
 void jugador::agacharse(){
+
     if(enSuelo && !agachado && vivo){
+
         agachado=true;
-        alto=Alto_agachado;
+        //alto = 140;
+
+        if(animacionNivel2){
+            estadoActual = AGACHADO;
+            frameActual = 0;
+            soltandoAgachado = false;
+
+            qDebug() << "Estado AGACHADO";
+        }
+
         qDebug() << "Bob Esponja se agacha";
     }
 }
 
 
 void jugador::actualizar(float deltaTime){
-    if (!vivo) return;
 
     // Actualizar posición según velocidad
     x += velocidadX * deltaTime;
     y += velocidadY * deltaTime;
+
+    velocidadY += gravedad * deltaTime; //Agg gravedad para que vuelva al suelo
+
+    if(y >= suelo){
+        y = suelo;
+        velocidadY = 0;
+        enSuelo = true;
+
+        if(animacionNivel2 && !agachado && estadoActual != MUERTO){
+            estadoActual = CORRIENDO;
+        }
+    }
+
+    if(animacionNivel2)
+    {
+        // ANIMACION DE MUERTE
+        if(estadoActual == MUERTO){
+
+            if(animacionMuerteTerminada){
+                return;
+            }
+
+            tiempoAnimacion += deltaTime;
+
+            if(tiempoAnimacion >= velocidadAnimacion){
+
+                tiempoAnimacion = 0;
+
+                frameActual++;
+
+                if(frameActual >= totalFrames){
+
+                    frameActual = totalFrames - 1;
+
+                    animacionMuerteTerminada = true;
+
+                    vivo = false;
+
+                    qDebug() << "Animacion muerte terminada";
+                }
+            }
+
+            return;
+        }
+        // ANIMACIONES NORMALES
+        tiempoAnimacion += deltaTime;
+
+        if(tiempoAnimacion >= velocidadAnimacion)
+        {
+            tiempoAnimacion = 0;
+
+            if(estadoActual == AGACHADO)
+            {
+                if(!soltandoAgachado)
+                {
+                    if(frameActual < 2)
+                    {
+                        frameActual++;
+                    }
+                }
+                else
+                {
+                    if(frameActual < 4)
+                    {
+                        frameActual++;
+                    }
+                    else
+                    {
+                        estadoActual = CORRIENDO;
+                        frameActual = 0;
+                        soltandoAgachado = false;
+                    }
+                }
+            }
+            else
+            {
+                frameActual++;
+
+                if(frameActual >= totalFrames)
+                {
+                    frameActual = 0;
+                }
+            }
+        }
+    }
 }
 
 void jugador::dibujar(QPainter& painter){
 
-    if(!vivo) return;
+    //Animacion n2
+
+    if(animacionNivel2){
+
+        QPixmap* spriteActual;
+
+        switch(estadoActual){
+        case CORRIENDO:spriteActual = &spriteCorrer; break;
+        case SALTANDO: spriteActual = &spriteSaltar; break;
+        case AGACHADO: spriteActual = &spriteAgachar; break;
+        case MUERTO: spriteActual = &spriteMuerte; break;
+        }
+
+        int frameWidth = spriteActual->width() / 5;
+        int frameHeight = spriteActual->height();
+
+        QRect origen (frameActual*frameWidth, 0, frameWidth, frameHeight);
+
+        painter.drawPixmap(QRectF (x, y, ancho, alto),
+                           *spriteActual, origen);
+
+        //VISTA DEL HITBOX
+        //painter.setPen(Qt::red);
+        //painter.drawRect(getHitbox());
+
+        return;
+    }
+
+    //Animacion n1
 
     int frameWidth = sprite.width() / 3;
     int frameHeight = sprite.height();
@@ -108,8 +262,23 @@ float jugador::getY() const { return y; }
 float jugador::getVelocidadX() const { return velocidadX; }
 float jugador::getVelocidadY() const { return velocidadY; }
 
+bool jugador::muerteTerminada() const{
+    return animacionMuerteTerminada;
+}
+
+int jugador::getImpactos() const{
+    return impactos;
+}
+
 QRectF jugador::getHitbox() const{
-    return QRectF(x+20, y+20, 100, 100);
+
+    //HB Agachado
+    if(agachado){ return QRectF(x+40, y+100, 100, 50);}
+
+    //HB Saltando
+    else if(!enSuelo){ return QRectF(x+50, y+70, 70, 40);}
+
+    return QRectF(x+50, y+50, 70, 125);
 }
 
 bool jugador::estaVivo() const { return vivo; }
@@ -118,8 +287,8 @@ bool jugador::estaAgachado() const { return agachado; }
 float jugador::getAncho() const { return ancho; }
 float jugador::getAlto() const { return alto; }
 
-// Setters
 
+// Setters
 
 void jugador::setPosicion(float nx, float ny){
     x=nx;
@@ -146,14 +315,25 @@ void jugador::setEnSuelo(bool estado){
 }
 
 void jugador::setAgachado(bool estado) {
-    agachado = estado;
-    if (!agachado) {
-        alto = Alto_normal;
+
+    if (!estado && agachado) {
+        if(animacionNivel2){
+            soltandoAgachado = true;
+        }
+        agachado = estado;
     }
 }
 
 void jugador::setAlto(float nuevoAlto) {
     alto = nuevoAlto;
+
+    if(animacionNivel2 && enSuelo)
+    {
+        estadoActual = CORRIENDO;
+    }
+}
+void jugador::setAncho(float nuevoAncho){
+    ancho = nuevoAncho;
 }
 
 void jugador::setSprite(const QString& ruta) {
@@ -178,4 +358,50 @@ void jugador::resetear() {
     alto = Alto_normal;
     vivo = true;
     qDebug() << "Jugador reseteado";
+}
+
+void jugador::activarAnimacionNivel2(int frames){
+    animacionNivel2 = true;
+    totalFrames = frames;
+
+    frameActual = 0;
+    tiempoAnimacion = 0;
+}
+
+void jugador::cargarSpritesNivel2(const QString &correr, const QString &saltar,
+                                  const QString &agachar, const QString &muerte)
+{
+    spriteCorrer.load(correr);
+    spriteSaltar.load(saltar);
+    spriteAgachar.load(agachar);
+    spriteMuerte.load(muerte);
+
+    estadoActual = CORRIENDO;
+
+}
+
+void jugador::recibirImpacto(){
+
+    impactos++;
+
+    qDebug() << "impactos:" << impactos;
+
+    if(impactos >= 3){
+
+        estadoActual = MUERTO;
+
+        frameActual = 0;
+
+        tiempoAnimacion = 0;
+
+        velocidadAnimacion = 0.40f;
+
+        totalFrames = 5;
+
+        vivo = false;
+
+        animacionMuerteTerminada = false;
+
+        qDebug() << "Animacion muerte";
+    }
 }

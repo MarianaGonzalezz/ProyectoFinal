@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="pageMenu">
      <property name="styleSheet">
@@ -198,7 +198,7 @@ QPushButton:pressed{
 </string>
       </property>
       <property name="text">
-       <string>Volver</string>
+       <string>Menú</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelGameover">
@@ -246,9 +246,48 @@ QPushButton:pressed{
        <bool>true</bool>
       </property>
      </widget>
+     <widget class="QPushButton" name="btnReiniciar">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>430</y>
+        <width>171</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial Rounded MT</family>
+        <pointsize>24</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{
+    border-image: url(:/sprites/boton1.png);
+    border: none;
+	color: white;
+}
+
+QPushButton:hover{
+    border-image: url(:/sprites/boton2.png);
+	color: black;
+}
+
+QPushButton:pressed{
+    border-image: url(:/sprites/boton3.png);
+	color: white;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Reintentar</string>
+      </property>
+     </widget>
      <zorder>label</zorder>
      <zorder>btnVolver</zorder>
      <zorder>labelGameover</zorder>
+     <zorder>btnReiniciar</zorder>
     </widget>
     <widget class="QWidget" name="pageJuego">
      <widget class="QWidget" name="widgetJuego" native="true">

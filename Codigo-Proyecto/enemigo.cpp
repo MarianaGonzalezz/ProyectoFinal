@@ -13,17 +13,16 @@ enemigo::enemigo(float x, float y, bool esDificil)
     , fallos(0)
     , precisionActual(0)
 {
-    /*
-    if (!sprite.load(":/sprites/calamardo.png")) {
+
+    if (!sprite.load(":/sprites/calamardo2.png")) {
         sprite = QPixmap(50, 50);
         sprite.fill(Qt::cyan);
     }
-    */
 
     if (dificil) {
         intervaloDisparo = 1.2f;
         velocidadProyectil = 450.0f;
-        precisionActual = 0.85f;
+        precisionActual = 0.30f;
     } else {
         intervaloDisparo = 2.5f;
         velocidadProyectil = 300.0f;
@@ -52,7 +51,7 @@ void enemigo::actualizar(float deltaTime)
 
 void enemigo::dibujar(QPainter& painter)
 {
-    painter.drawPixmap(int(x), int(y), sprite);
+    painter.drawPixmap(QRect(int(x), int(y), 200, 200), sprite);
 }
 
 proyectil* enemigo::lanzarProyectil(float jugadorX, float jugadorY, float jugadorVelX)
@@ -70,7 +69,7 @@ proyectil* enemigo::lanzarProyectil(float jugadorX, float jugadorY, float jugado
     if(!dificil){
         //  Modo facil, angulo aleatorio
 
-        int anguloAleatorio= (rand() % 120)-60;
+        //int anguloAleatorio= (rand() % 120)-60;
 
         float imprecisionX = (rand() % 200) - 100;
         float dxFinal = dx + imprecisionX;
@@ -95,9 +94,9 @@ proyectil* enemigo::lanzarProyectil(float jugadorX, float jugadorY, float jugado
             if(precisionUsar>0.98f)precisionUsar=0.98f;
         }
 
-        if(fallos>aciertos+8){
+        if(fallos>aciertos+2){
             precisionUsar=precisionUsar-0.05f;
-            if (precisionUsar < 0.70f) precisionUsar = 0.70f;
+            if (precisionUsar < 0.10f) precisionUsar = 0.10f;
         }
 
         // Prediccion: calcular donde estara Bob
@@ -108,13 +107,16 @@ proyectil* enemigo::lanzarProyectil(float jugadorX, float jugadorY, float jugado
 
         // Imprecision
 
-        int rango=(1.0f-precisionUsar)*80;
+        int rango=(1.0f-precisionUsar)*600;
         int imprecision = (rand() % (rango * 2)) - rango;
         float dxFinal = dxPredicho + imprecision;
 
         if(dxFinal>350)dxFinal=350;
         if(dxFinal<-350)dxFinal=-350;
 
+        if(dxFinal >-50){
+            dxFinal = -50;
+        }
         velX=dxFinal*2.8f;
 
         if(jugadorY<400){
@@ -124,7 +126,7 @@ proyectil* enemigo::lanzarProyectil(float jugadorX, float jugadorY, float jugado
         }
     }
 
-    return new proyectil(x + 25, y+25, velX, velY);
+    return new proyectil(x - 30, y+60, velX, velY);
 }
 
 // Aprendizaje
@@ -134,8 +136,12 @@ void enemigo::registrarAcierto(){
 
     if(dificil){
         aciertos++;
-        precisionActual=precisionActual+0.02f;
-        if (precisionActual > 0.98f) precisionActual = 0.98f;
+
+        precisionActual += 0.20f;
+
+        if (precisionActual > 0.98f){
+            precisionActual = 0.98f;
+        }
         qDebug() << "Acierto! Precisión:" << int(precisionActual * 100) << "%";
     }
 }
@@ -143,11 +149,12 @@ void enemigo::registrarAcierto(){
 void enemigo::registrarFallo(){
     if (dificil) {
         fallos++;
-        if (fallos > aciertos + 5) {
-            precisionActual = precisionActual - 0.02f;
-            if (precisionActual < 0.70f) precisionActual = 0.70f;
-            qDebug() << "Fallo. Precisión:" << int(precisionActual * 100) << "%";
+        precisionActual -= 0.15f;
+
+        if(precisionActual < 0.02f){
+            precisionActual = 0.02f;
         }
+        qDebug() << "Fallo. Precision:"<< int(precisionActual * 100) << "%";
     }
 }
 
