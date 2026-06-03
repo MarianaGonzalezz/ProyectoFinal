@@ -3,6 +3,7 @@
 
 
 #include <QTimer>
+#include <QElapsedTimer>
 #include <QPoint>
 #include <QVector>
 #include <vector>
@@ -27,6 +28,10 @@ private:
     QTimer* timerJuego;
     int tiempoRestante;
     float tiempoAcumulado;
+
+    QElapsedTimer cronometroNivel;
+    static const qint64 TIEMPO_LICENCIA_MS = 60000;
+    bool licenciaYaGenerada;
 
     static const int Tiempo_inicial=60;
 

@@ -7,7 +7,7 @@ nivel1::nivel1()
     , tiempoRestante(Tiempo_inicial)
     , tiempoAcumulado(0.0f)
     ,frameActualFondo(0), tiempoAnimacionFondo(0.0f), duracionFrameFondo(0.20f)
-
+    , licenciaYaGenerada(false)
 {
     timerJuego= new QTimer();
     qDebug() << "nivel 1 creado";
@@ -63,6 +63,8 @@ void nivel1::iniciar()
     tiempoRestante = Tiempo_inicial;
     tiempoAcumulado = 0.0f;
     //monedasRecogidas = 0;
+    licenciaYaGenerada=false;
+    cronometroNivel.start();
 
 }
 
@@ -114,6 +116,13 @@ void nivel1::actualizar(float deltaTime){
     }
     for(bonus* moneda : monedas){
         moneda ->actualizar(deltaTime);
+    }
+
+    if (!licenciaYaGenerada &&
+        cronometroNivel.elapsed() >= TIEMPO_LICENCIA_MS)
+    {
+        licenciaYaGenerada = true;
+        qDebug() << "¡Tiempo cumplido! agrega la licencia aquí.";
     }
 
     verificarColisiones();
