@@ -29,6 +29,9 @@ nivel1::nivel1()
 
     tiempoSpawn = 0.0f;
     intervaloSpawn = 1.0f;
+
+    licenciaActiva = false;
+    spriteLicencia.load(":/sprites/licencia.png");
 }
 
 nivel1::~nivel1()
@@ -50,11 +53,6 @@ void nivel1::iniciar()
 
     bob.setSprite(":/sprites/carrito.png");
     bob.setPosicion(550, 400);
-    //vectorObstaculos.push_back(new obstaculos(700, 500, 0, "caja"));
-
-    //vectorObstaculos.push_back(new obstaculos(900,500,0,"medusas"));
-
-    //monedas.push_back(new bonus(430,350));
 
     qDebug() << "Iniciando Nivel 1";
 
@@ -63,8 +61,10 @@ void nivel1::iniciar()
     tiempoRestante = Tiempo_inicial;
     tiempoAcumulado = 0.0f;
     //monedasRecogidas = 0;
+    licenciaActiva = false;
     licenciaYaGenerada=false;
     cronometroNivel.start();
+    progresoLicencia = 0.0f;
 
 }
 
@@ -78,8 +78,21 @@ void nivel1::verificarColisiones(){
         if(moneda->estaActivo() &&
             moneda->getHitbox().intersects(bob.getHitbox())){
             tiempoRestante += moneda->aplicarEfecto(bob);
+            progresoLicencia += 5000;
         }
     };
+
+    if(licenciaActiva){
+        QRectF hitboxLicencia(licenciaX, licenciaY, 80, 80);
+
+        if(hitboxLicencia.intersects(bob.getHitbox())){
+            licenciaActiva = false;
+            terminado = true;
+            victoria = true;
+
+            qDebug() << "Licencia Recogida";
+        }
+    }
 }
 
 void nivel1::actualizar(float deltaTime){
@@ -89,11 +102,14 @@ void nivel1::actualizar(float deltaTime){
         intervaloSpawn -= 0.0001f;
     }
 
-    tiempoSpawn += deltaTime;
 
-    if (tiempoSpawn >= intervaloSpawn){
-        tiempoSpawn = 0.0f;
-        generarObjetoAleatorio();
+    if(!licenciaYaGenerada){
+        tiempoSpawn += deltaTime;
+
+        if (tiempoSpawn >= intervaloSpawn){
+            tiempoSpawn = 0.0f;
+            generarObjetoAleatorio();
+        }
     }
 
     bob.actualizar(deltaTime);
@@ -118,11 +134,36 @@ void nivel1::actualizar(float deltaTime){
         moneda ->actualizar(deltaTime);
     }
 
+    progresoLicencia += deltaTime * 1000;
+
+    if(licenciaActiva && licenciaY < destinoLicenciaY){
+        licenciaY += velocidadLicencia * deltaTime;
+        if(licenciaY > destinoLicenciaY){
+            licenciaY = destinoLicenciaY;
+        }
+    }
+
     if (!licenciaYaGenerada &&
-        cronometroNivel.elapsed() >= TIEMPO_LICENCIA_MS)
+        progresoLicencia >= TIEMPO_LICENCIA_MS)
     {
         licenciaYaGenerada = true;
-        qDebug() << "¡Tiempo cumplido! agrega la licencia aquí.";
+
+        licenciaActiva = true;
+        licenciaX= 600;
+        licenciaY = 100;
+        destinoLicenciaY = 350;
+        velocidadLicencia = 100;
+
+        //Eliminar obstaculos
+        for(obstaculos* obs : vectorObstaculos){ delete obs; }
+        vectorObstaculos.clear();
+
+        //Eliminar monedas
+        for(bonus* moneda : monedas){delete moneda;}
+        monedas.clear();
+
+        qDebug()<<"LicenciaGenerada";
+
     }
 
     verificarColisiones();
@@ -154,7 +195,27 @@ void nivel1::dibujar(QPainter &painter){
 
     painter.drawPixmap(0,0,1280,720,fondoEnUso);
 
-    //Jugador
+    /////// BARRA DE LICENCIA ///////
+
+    float progreso = progresoLicencia /TIEMPO_LICENCIA_MS;
+    if(progreso > 1.0f){
+        progreso = 1.0f;
+    }
+    //FondoBarra
+    painter.setBrush(Qt::gray);
+    painter.drawRect(20,20,300,25);
+
+    //ParteLlena
+    painter.setBrush(Qt::green);
+    painter.drawRect(20,20,int(300*progreso),25);
+
+    //Texto
+    painter.setPen(Qt::white);
+    painter.drawText(20, 70, QString("Licencia en: %1 s ").arg(int(progreso*100)));
+
+
+
+    ////Jugador
     bob.dibujar(painter);
 
     //obstaculos
@@ -166,6 +227,11 @@ void nivel1::dibujar(QPainter &painter){
     for(bonus* moneda: monedas){
         moneda->dibujar(painter);
     };
+
+    //licencia
+    if(licenciaActiva){
+        painter.drawPixmap(licenciaX,licenciaY, 120, 120,spriteLicencia);
+    }
 
 }
 

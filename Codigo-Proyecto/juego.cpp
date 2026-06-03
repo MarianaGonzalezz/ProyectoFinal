@@ -5,7 +5,7 @@
 juego::juego(QWidget *parent)
     : QWidget(parent),
     nivelActual(nullptr),
-    numeroNivel(1)
+    numeroNivel(1), dificultadNivel2(1)
 {
     setFixedSize(1280,720);
 
@@ -22,9 +22,21 @@ juego::juego(QWidget *parent)
                     {
                         qDebug() << "Nivel terminado";
 
-                        emit gameOver();
-
-                        timer.stop();
+                        if(nivelActual ->hayVictoria()){
+                            if(numeroNivel == 1){
+                                emit mostrarTransicion();
+                                timer.stop();
+                                //cambiarNivel(2);
+                            } else {
+                                qDebug() << "Juego completado";
+                                emit victoriaFinal();
+                                timer.stop();
+                                return;
+                            }
+                        } else {
+                            emit gameOver();
+                            timer.stop();
+                        }
                     }
 
                     update();
@@ -59,10 +71,12 @@ void juego::cambiarNivel(int numero)
 
     else if(numero == 2)
     {
-        nivelActual = new nivel2();
+        bool dificil = (dificultadNivel2 == 2);
+        nivelActual = new nivel2(dificil);
     }
 
     nivelActual->iniciar();
+    timer.start(16);
 }
 
 void juego::paintEvent(QPaintEvent *event)
@@ -101,4 +115,19 @@ bool juego::estaTerminado() const
     }
 
     return false;
+}
+
+void juego::reinciarNivelActual(){
+    cambiarNivel(numeroNivel);
+    timer.start(16);
+    setFocus();
+}
+
+void juego::setDificultadNivel2(int dificultad)
+{
+    dificultadNivel2 = dificultad;
+}
+
+int juego::getNumeroNivel() const{
+    return numeroNivel;
 }

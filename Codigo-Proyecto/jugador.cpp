@@ -33,7 +33,7 @@ jugador::jugador()
 
     soltandoAgachado = false;
 
-    impactos = 0;
+    //impactos = 0;
     animacionMuerteTerminada = false;
 }
 
@@ -58,7 +58,7 @@ jugador::jugador(float xInicial, float yInicial)
 
     soltandoAgachado = false;
 
-    impactos = 0;
+    //impactos = 0;
     animacionMuerteTerminada = false;
 }
 
@@ -266,9 +266,9 @@ bool jugador::muerteTerminada() const{
     return animacionMuerteTerminada;
 }
 
-int jugador::getImpactos() const{
-    return impactos;
-}
+//int jugador::getImpactos() const{
+  //  return impactos;
+//}
 
 QRectF jugador::getHitbox() const{
 
@@ -382,12 +382,6 @@ void jugador::cargarSpritesNivel2(const QString &correr, const QString &saltar,
 
 void jugador::recibirImpacto(){
 
-    impactos++;
-
-    qDebug() << "impactos:" << impactos;
-
-    if(impactos >= 3){
-
         estadoActual = MUERTO;
 
         frameActual = 0;
@@ -403,5 +397,4 @@ void jugador::recibirImpacto(){
         animacionMuerteTerminada = false;
 
         qDebug() << "Animacion muerte";
-    }
 }

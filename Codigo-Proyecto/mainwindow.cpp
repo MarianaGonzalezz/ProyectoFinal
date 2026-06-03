@@ -24,6 +24,14 @@ MainWindow::MainWindow(QWidget *parent)
         ui->stackedWidget->setCurrentWidget(ui->pageGameover);
     });
 
+    connect(miJuego, &juego::mostrarTransicion, this, [this](){
+        ui->stackedWidget->setCurrentWidget(ui->pageTransicion);
+    });
+
+    connect(miJuego, &juego::victoriaFinal, this, [this](){
+        ui->stackedWidget->setCurrentWidget(ui->pageVictoria);
+    });
+
     //Mostrar menu al iniciar
     ui->stackedWidget->setCurrentWidget(ui->pageMenu);
 }
@@ -45,26 +53,23 @@ void MainWindow::on_JUGAR_clicked()
 void MainWindow::on_btnReiniciar_clicked()
 {
     qDebug() << "CLICK REINICIAR";
+    qDebug() << "Nivel actual:" << miJuego->getNumeroNivel();
 
-    delete miJuego;
 
-    miJuego = new juego(ui->widgetJuego);
+    if(miJuego->getNumeroNivel() == 2){
 
-    miJuego->setGeometry(
-        0,
-        0,
-        1280,
-        720
-        );
+        qDebug() << "Mostrando transicion";
 
-    connect(miJuego, &juego::gameOver, this, [this](){
-        ui->stackedWidget->setCurrentWidget(ui->pageGameover);
-    });
+        ui->stackedWidget->setCurrentWidget(ui->pageTransicion);
 
-    miJuego->iniciarJuego();
+    } else {
 
-    ui->stackedWidget->setCurrentWidget(ui->pageJuego);
-    miJuego->setFocus();
+        qDebug() << "Reiniciando nivel";
+        miJuego -> reinciarNivelActual();
+
+        ui->stackedWidget->setCurrentWidget(ui->pageJuego);
+        miJuego->setFocus();
+    }
 }
 
 void MainWindow::on_btnVolver_clicked()
@@ -74,4 +79,41 @@ void MainWindow::on_btnVolver_clicked()
 
 void MainWindow::on_SALIR_clicked(){
     close();
+}
+void MainWindow::on_SALIR2_clicked(){
+    close();
+}
+
+void MainWindow::on_btnFacil_clicked()
+{
+    miJuego->setDificultadNivel2(1);
+
+    miJuego->cambiarNivel(2);
+
+    ui->stackedWidget->setCurrentWidget(ui->pageJuego);
+
+    miJuego->setFocus();
+}
+
+void MainWindow::on_btnDificil_clicked()
+{
+    miJuego->setDificultadNivel2(2);
+
+    miJuego->cambiarNivel(2);
+
+    ui->stackedWidget->setCurrentWidget(ui->pageJuego);
+
+    miJuego->setFocus();
+}
+void MainWindow::on_btnHISTORIA_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->pageHistoria);
+}
+void MainWindow::on_btnVolver2_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->pageMenu);
+}
+void MainWindow::on_btnVolver3_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->pageMenu);
 }

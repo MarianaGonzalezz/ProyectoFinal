@@ -11,8 +11,6 @@ private:
     float x,y;
     float velocidadX, velocidadY;
 
-    int impactos;
-
     // Estado interno
 
     bool enSuelo;

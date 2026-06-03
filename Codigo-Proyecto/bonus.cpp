@@ -15,7 +15,7 @@ bonus::bonus(float x, float y )
         sprite = QPixmap(Ancho_moneda, Alto_moneda);
         sprite.fill(Qt::yellow);
     }
-    qDebug() << "Bonus creado en (" << x << "," << y << ")";
+    //qDebug() << "Bonus creado en (" << x << "," << y << ")";
 }
 
 bonus::~bonus(){

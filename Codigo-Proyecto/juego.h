@@ -16,11 +16,12 @@ private:
     nivel* nivelActual;
     QTimer timer;
     int numeroNivel;
-
-    void cambiarNivel(int numero);
+    int dificultadNivel2;
 
 signals:
     void gameOver();
+    void mostrarTransicion();
+    void victoriaFinal();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -35,7 +36,13 @@ public:
 
     void iniciarJuego();
 
+    void reinciarNivelActual();
 
+    void cambiarNivel(int numero);
+
+    void setDificultadNivel2(int dificultad);
+
+    int getNumeroNivel() const;
 };
 
 #endif // JUEGO_H

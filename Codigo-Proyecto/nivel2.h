@@ -15,10 +15,19 @@ private:
     enemigo calamardo;
     vector<proyectil*> proyectiles;
 
-    void verificarColisiones(); 
+    int vidas;
+    int vidasMaximas;
+
+    QPixmap corazonLleno;
+    QPixmap corazonVacio;
+
+    void verificarColisiones();
+    bool modoDificil;
+
+    int hamburguesasLanzadas;
 
 public:
-    nivel2();
+    nivel2(bool dificil = false);
     ~nivel2();
 
     QPixmap fondo;

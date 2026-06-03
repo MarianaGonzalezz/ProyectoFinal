@@ -4,8 +4,8 @@
 #include <ctime>
 
 
-nivel2::nivel2()
-    : calamardo (900, 350, true){
+nivel2::nivel2(bool dificil)
+    : calamardo (900, 350, dificil), modoDificil(dificil){
     fondo.load(":/sprites/fondoN2.png");
     fondo = fondo.scaled(
         1280,
@@ -14,6 +14,8 @@ nivel2::nivel2()
         Qt::SmoothTransformation);
     fondoOffset = 0;
     srand(time(nullptr));
+    corazonLleno.load(":/sprites/corazonLleno1.png");
+    corazonVacio.load(":/sprites/corazonVacio1.png");
 }
 
 nivel2::~nivel2(){
@@ -24,6 +26,8 @@ nivel2::~nivel2(){
 }
 
 void nivel2::iniciar(){
+
+    bob.resetear();
 
     bob.cargarSpritesNivel2(":/sprites/correr.png",
                             ":/sprites/saltar5.png",
@@ -36,6 +40,16 @@ void nivel2::iniciar(){
 
     bob.setAncho(180);
     bob.setAlto(180);
+
+    hamburguesasLanzadas = 0;
+
+    if (modoDificil){
+        vidas = 3;
+        vidasMaximas = 3;
+    } else{
+        vidas = 5;
+        vidasMaximas = 5;
+    }
 
     terminado = false;
     victoria=false;
@@ -77,6 +91,19 @@ void nivel2::actualizar(float deltaTime){
 
     if(nuevo){
         proyectiles.push_back(nuevo);
+        hamburguesasLanzadas++;
+
+        if(!modoDificil && hamburguesasLanzadas >= 11){
+            victoria = true;
+            terminado = true;
+            return;
+        }
+
+        if(modoDificil && hamburguesasLanzadas >= 21){
+            victoria = true;
+            terminado = true;
+            return;
+        }
     }
 
     for(proyectil* p : proyectiles){
@@ -97,6 +124,16 @@ void nivel2::dibujar(QPainter &painter){
     for(proyectil* p : proyectiles){
         p->dibujar(painter);
     }
+
+    for (int i = 0; i < vidasMaximas; i++){
+        if (i < vidas){
+            painter.drawPixmap( i * 60,
+                                20, 50, 50, corazonLleno);
+        } else {
+            painter.drawPixmap( i * 60,
+                               20, 50, 50, corazonVacio);
+        }
+    }
 }
 
 void nivel2::verificarColisiones(){
@@ -108,9 +145,13 @@ void nivel2::verificarColisiones(){
 
         //Acierto
         if(p->getHitbox().intersects(bob.getHitbox())){
+
             calamardo.registrarAcierto();
 
-            bob.recibirImpacto();
+            vidas --;
+            if(vidas <= 0){
+                bob.recibirImpacto();
+            }
 
             delete p;
 

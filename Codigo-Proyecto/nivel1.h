@@ -35,6 +35,15 @@ private:
 
     static const int Tiempo_inicial=60;
 
+    //elementos de la licencia
+    bool licenciaActiva;
+    float licenciaX;
+    float licenciaY;
+    float velocidadLicencia;
+    float destinoLicenciaY;
+    QPixmap spriteLicencia;
+    float progresoLicencia;
+
     // Metodos privados
 
     void crearObstaculos();
