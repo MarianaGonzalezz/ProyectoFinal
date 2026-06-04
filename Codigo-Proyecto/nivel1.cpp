@@ -9,6 +9,19 @@ nivel1::nivel1()
     ,frameActualFondo(0), tiempoAnimacionFondo(0.0f), duracionFrameFondo(0.20f)
     , licenciaYaGenerada(false)
 {
+
+    sonidoGolpe.setSource(QUrl("qrc:/sonidos/choque.wav"));
+    sonidoGolpe.setVolume(0.8);
+
+    musicaFondo = new QMediaPlayer;
+    salidaAudio = new QAudioOutput;
+
+    musicaFondo->setAudioOutput(salidaAudio);
+
+    musicaFondo->setSource(QUrl("qrc:/sonidos/nivel1.mp3"));
+
+    salidaAudio->setVolume(0.5);
+
     timerJuego= new QTimer();
     qDebug() << "nivel 1 creado";
 
@@ -36,6 +49,8 @@ nivel1::nivel1()
 
 nivel1::~nivel1()
 {
+    delete musicaFondo;
+    delete salidaAudio;
     for (auto obs : vectorObstaculos)
     delete obs;
     for (auto moneda : monedas)
@@ -51,10 +66,15 @@ nivel1::~nivel1()
 void nivel1::iniciar()
 {
 
+    musicaFondo->play();
+
     bob.setSprite(":/sprites/carrito.png");
     bob.setPosicion(550, 400);
 
     qDebug() << "Iniciando Nivel 1";
+
+    esperandoGameOver = false;
+    tiempoDerrota = 0.0f;
 
     terminado = false;
     victoria = false;
@@ -69,6 +89,7 @@ void nivel1::iniciar()
 }
 
 void nivel1::verificarColisiones(){
+
     for(obstaculos* obs: vectorObstaculos){
         if (obs->getHitbox().intersects(bob.getHitbox())){
             obs->aplicarEfecto(bob);
@@ -86,6 +107,9 @@ void nivel1::verificarColisiones(){
         QRectF hitboxLicencia(licenciaX, licenciaY, 80, 80);
 
         if(hitboxLicencia.intersects(bob.getHitbox())){
+
+            musicaFondo->stop();
+
             licenciaActiva = false;
             terminado = true;
             victoria = true;
@@ -168,10 +192,45 @@ void nivel1::actualizar(float deltaTime){
 
     verificarColisiones();
 
-    if(!bob.estaVivo()){
-        qDebug()<<"Bob murió";
-        terminado = true;
-        victoria = false;
+    if(!bob.estaVivo() && !esperandoGameOver){
+
+        musicaFondo->stop();
+
+        sonidoGolpe.stop();
+        sonidoGolpe.play();
+
+        sacudiendoCamara = true;
+        tiempoSacudida = 0.0f;
+
+        esperandoGameOver = true;
+        tiempoDerrota = 0.0f;
+
+    }
+
+    if(esperandoGameOver){
+        tiempoDerrota += deltaTime;
+
+        if(sacudiendoCamara){
+            tiempoSacudida += deltaTime;
+
+            offsetCamaraX = (rand()%21)-10;
+            offsetCamaraY = (rand()%21)-10;
+
+            if(tiempoSacudida >= 0.3f){
+                sacudiendoCamara = false;
+
+                offsetCamaraX = 0;
+                offsetCamaraY = 0;
+            }
+        }
+
+        if(tiempoDerrota >= 0.8f){
+
+            sonidoGolpe.stop();
+            terminado = true;
+            victoria= false;
+        }
+        return;
     }
 
     vistasetY = 0;
@@ -188,6 +247,11 @@ void nivel1::actualizar(float deltaTime){
 }
 
 void nivel1::dibujar(QPainter &painter){
+
+    painter.save();
+    painter.translate(offsetCamaraX,offsetCamaraY);
+
+
     //Fondo
     const QPixmap& fondoEnUso = framesFondoPrincipal.isEmpty() ? fondo
                                                                : framesFondoPrincipal[frameActualFondo];
@@ -232,6 +296,8 @@ void nivel1::dibujar(QPainter &painter){
     if(licenciaActiva){
         painter.drawPixmap(licenciaX,licenciaY, 120, 120,spriteLicencia);
     }
+
+    painter.restore();
 
 }
 

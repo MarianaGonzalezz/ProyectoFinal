@@ -2,6 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
+#include <QMediaPlayer>////Para audios largos
+#include <QAudioOutput>////Para audios largos
+
+#include <QSoundEffect>////Para efectos cortos
+
 #include "juego.h"
 
 QT_BEGIN_NAMESPACE
@@ -13,10 +19,6 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() override;
 
 private slots:
     void on_JUGAR_clicked();
@@ -33,5 +35,14 @@ private slots:
 private:
     Ui::MainWindow *ui;
     juego* miJuego;
+
+    QMediaPlayer* musicaMenu;
+    QAudioOutput* audioMenu;
+    QSoundEffect sonidoGameOver;
+
+public:
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override;
+
 };
 #endif // MAINWINDOW_H

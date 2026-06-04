@@ -8,6 +8,10 @@
 #include <QVector>
 #include <vector>
 
+#include <QSoundEffect>////Para audios cortos
+#include <QMediaPlayer>
+#include <QAudioOutput>
+
 #include "nivel.h"
 #include "jugador.h"
 #include "obstaculos.h"
@@ -23,6 +27,14 @@ private:
 
     std::vector<obstaculos*> vectorObstaculos;
     std::vector<bonus*> monedas;
+
+    QSoundEffect sonidoGolpe;
+
+    bool esperandoGameOver = false;
+    float tiempoDerrota = 0.0f;
+
+    QMediaPlayer* musicaFondo;
+    QAudioOutput* salidaAudio;
 
     // Timer
     QTimer* timerJuego;
@@ -50,6 +62,13 @@ private:
     void crearMonedas();
     void verificarColisiones();
     void generarObjetoAleatorio();
+
+    //Sacudida de camara
+    bool sacudiendoCamara = false;
+    float tiempoSacudida = 0.0f;
+
+    int offsetCamaraX = 0;
+    int offsetCamaraY = 0;
 
 public:
     nivel1();

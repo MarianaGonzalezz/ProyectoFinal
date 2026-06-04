@@ -6,6 +6,10 @@
 
 nivel2::nivel2(bool dificil)
     : calamardo (900, 350, dificil), modoDificil(dificil){
+
+    sonidoRisa.setSource(QUrl("qrc:/sonidos/risaCalamardo.wav"));
+    sonidoRisa.setVolume(0.8);
+
     fondo.load(":/sprites/fondoN2.png");
     fondo = fondo.scaled(
         1280,
@@ -16,6 +20,7 @@ nivel2::nivel2(bool dificil)
     srand(time(nullptr));
     corazonLleno.load(":/sprites/corazonLleno1.png");
     corazonVacio.load(":/sprites/corazonVacio1.png");
+
 }
 
 nivel2::~nivel2(){
@@ -145,6 +150,8 @@ void nivel2::verificarColisiones(){
 
         //Acierto
         if(p->getHitbox().intersects(bob.getHitbox())){
+
+            sonidoRisa.play();
 
             calamardo.registrarAcierto();
 

@@ -8,6 +8,8 @@ using namespace std;
 #include "enemigo.h"
 #include "proyectil.h"
 
+#include <QSoundEffect>
+
 class nivel2 : public nivel
 {
 private:
@@ -25,6 +27,8 @@ private:
     bool modoDificil;
 
     int hamburguesasLanzadas;
+
+    QSoundEffect sonidoRisa;
 
 public:
     nivel2(bool dificil = false);

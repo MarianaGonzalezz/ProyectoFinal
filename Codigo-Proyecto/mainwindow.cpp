@@ -8,6 +8,31 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    sonidoGameOver.setSource(
+        QUrl("qrc:/sonidos/aTarde.wav"));
+
+    //Sonido de fondo en el menu
+    audioMenu = new QAudioOutput (this);
+    musicaMenu = new QMediaPlayer (this);
+
+    musicaMenu->setAudioOutput(audioMenu);
+    audioMenu->setVolume(0.5);
+
+    musicaMenu->setSource(QUrl("qrc:/sonidos/menu.mp3"));
+
+    musicaMenu->play();
+
+    connect(musicaMenu, &QMediaPlayer::mediaStatusChanged, this,
+            [this](QMediaPlayer::MediaStatus status)
+            {
+                if(status == QMediaPlayer::EndOfMedia)
+                {
+                    musicaMenu->setPosition(0);
+                    musicaMenu->play();
+                }
+            });
+
+    //Tamaño de la ventana
     setFixedSize(1280, 720);
 
     //Creacion del juego dentro del widgetJuego
@@ -20,7 +45,12 @@ MainWindow::MainWindow(QWidget *parent)
         720
         );
 
+
+    //Coneccion de los botones
     connect(miJuego, &juego::gameOver, this, [this](){
+
+        sonidoGameOver.play();
+
         ui->stackedWidget->setCurrentWidget(ui->pageGameover);
     });
 
@@ -43,6 +73,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_JUGAR_clicked()
 {
+    musicaMenu->stop();
+
     miJuego ->iniciarJuego();
     ui->stackedWidget->setCurrentWidget(ui->pageJuego);
 

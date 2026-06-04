@@ -1,4 +1,4 @@
-QT += widgets
+QT += widgets multimedia
 
 CONFIG += c++17
 
@@ -7,7 +7,6 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    #gamewidget.cpp \
     juego.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -21,7 +20,6 @@ SOURCES += \
     enemigo.cpp \
 
 HEADERS += \
-    #gamewidget.h \
     juego.h \
     mainwindow.h \
     nivel.h \

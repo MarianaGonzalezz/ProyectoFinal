@@ -28,5 +28,10 @@
         <file>sprites/fondoHistoria1.jpg</file>
         <file>sprites/controles.png</file>
         <file>sprites/victoria.jpg</file>
+        <file>sonidos/menu.mp3</file>
+        <file>sonidos/choque.wav</file>
+        <file>sonidos/nivel1.mp3</file>
+        <file>sonidos/aTarde.wav</file>
+        <file>sonidos/risaCalamardo.wav</file>
     </qresource>
 </RCC>
